@@ -1,17 +1,38 @@
-
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Users, User, Heart } from "lucide-react";
+import AddMedication from "./Medications/AddMedication";
+import { supabase } from "../supabaseClient";
+import { useNavigate } from "react-router-dom";
 
 interface OnboardingProps {
   onComplete: (userType: "patient" | "caretaker") => void;
 }
 
 const Onboarding = ({ onComplete }: OnboardingProps) => {
+  const navigate = useNavigate();
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      console.error("Logout failed:", error.message);
+    } else {
+      navigate("/login");
+    }
+  };
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center p-6">
       <div className="max-w-4xl w-full">
         <div className="text-center mb-12">
+          <div>
+            <button className="float-right bg-blue-500 text-white px-4 py-2 rounded" onClick={handleLogout}>Logout</button>
+          </div>
           <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-green-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
             <Heart className="w-10 h-10 text-white" />
           </div>
@@ -19,7 +40,8 @@ const Onboarding = ({ onComplete }: OnboardingProps) => {
             Welcome to MediCare Companion
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Your trusted partner in medication management. Choose your role to get started with personalized features.
+            Your trusted partner in medication management. Choose your role to
+            get started with personalized features.
           </p>
         </div>
 
@@ -29,7 +51,9 @@ const Onboarding = ({ onComplete }: OnboardingProps) => {
               <div className="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-200 transition-colors">
                 <User className="w-8 h-8 text-blue-600" />
               </div>
-              <CardTitle className="text-2xl text-blue-700">I'm a Patient</CardTitle>
+              <CardTitle className="text-2xl text-blue-700">
+                I'm a Patient
+              </CardTitle>
               <CardDescription className="text-base">
                 Track your medication schedule and maintain your health records
               </CardDescription>
@@ -53,7 +77,7 @@ const Onboarding = ({ onComplete }: OnboardingProps) => {
                   Large, easy-to-use interface
                 </li>
               </ul>
-              <Button 
+              <Button
                 className="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white py-3 text-lg"
                 onClick={() => onComplete("patient")}
               >
@@ -67,7 +91,9 @@ const Onboarding = ({ onComplete }: OnboardingProps) => {
               <div className="w-16 h-16 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-green-200 transition-colors">
                 <Users className="w-8 h-8 text-green-600" />
               </div>
-              <CardTitle className="text-2xl text-green-700">I'm a Caretaker</CardTitle>
+              <CardTitle className="text-2xl text-green-700">
+                I'm a Caretaker
+              </CardTitle>
               <CardDescription className="text-base">
                 Monitor and support your loved one's medication adherence
               </CardDescription>
@@ -91,7 +117,7 @@ const Onboarding = ({ onComplete }: OnboardingProps) => {
                   Receive email alerts
                 </li>
               </ul>
-              <Button 
+              <Button
                 className="w-full mt-6 bg-green-600 hover:bg-green-700 text-white py-3 text-lg"
                 onClick={() => onComplete("caretaker")}
               >
@@ -99,6 +125,9 @@ const Onboarding = ({ onComplete }: OnboardingProps) => {
               </Button>
             </CardContent>
           </Card>
+        </div>
+        <div className="p-6">
+          <AddMedication />
         </div>
 
         <div className="text-center mt-12">
